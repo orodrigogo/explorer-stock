@@ -8,7 +8,8 @@ import { Feature } from '../../components/Feature';
 import { Header } from '../../components/Header';
 
 export function Home() {
-  const { user } = useAuth()
+  const { user } = useAuth();
+
   return (
     <Container>
       <Header />

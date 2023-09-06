@@ -14,15 +14,17 @@ function AuthProvider({ children }) {
 
   async function signIn({ email, password }) {
     try {
-      const response = await api.post("sessions", { email, password });
-      const { token, user } = response.data;
+      const response = await api.post(
+        "sessions",
+        { email, password },
+        { withCredentials: true }
+      );
 
-      localStorage.setItem("@rocketnotes:user", JSON.stringify(user));
-      localStorage.setItem("@rocketnotes:token", token);
+      const { user } = response.data;
 
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      localStorage.setItem("@estock:user", JSON.stringify(user));
 
-      setData({ token, user });
+      setData({ user });
 
     } catch (error) {
       if (error.response) {
@@ -34,22 +36,17 @@ function AuthProvider({ children }) {
   };
 
   function signOut() {
-    localStorage.removeItem("@rocketnotes:token");
-    localStorage.removeItem("@rocketnotes:user");
+    localStorage.removeItem("@estock:user");
 
     setData({});
   }
 
 
   useEffect(() => {
-    const token = localStorage.getItem("@rocketnotes:token");
-    const user = localStorage.getItem("@rocketnotes:user");
+    const user = localStorage.getItem("@estock:user");
 
-    if (token && user) {
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
+    if (user) {
       setData({
-        token,
         user: JSON.parse(user)
       });
     }
